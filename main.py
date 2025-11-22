@@ -67,6 +67,7 @@ class Connect4Game(QMainWindow):
                 self.buttons[r][col].setStyleSheet(f"background-color: {color}; border-radius: {disks_size/2}px;")
                 # Updates the board on who got the tile
                 self.board[r][col] = self.current_player
+                
 
                 # Switch current player in play to another
                 if self.current_player == 1:
@@ -88,13 +89,12 @@ class Connect4Game(QMainWindow):
         # self.game_over = True
         pass
 
-    def check_draw(self, row, col):
+    def check_draw(self):
         # Needs to check if board is full and that there is not connect 4
         if (self.board == 0).any():
+            print("test")
 
             # set self.game_over = True
-            pass
-        pass
 
     # ==================== Artificial Intelligence ====================
     def against_AI(self, row, col):
