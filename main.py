@@ -186,13 +186,13 @@ class Connect4Game(QMainWindow):
                 if board[r][c] != 0 and board[r][c] == board[r+1][c] == board[r+2][c] == board[r+3][c]:
                     return True
   
-        # Diagonal Check (\)
+        # Diagonal Check (/)
         for r in range(ROWS - 3):
             for c in range(COLS - 3):
                 if board[r][c] != 0 and board[r][c] == board[r+1][c+1] == board[r+2][c+2] == board[r+3][c+3]:
                     return True
         
-        # Diagonal Check (/)
+        # Diagonal Check (\)
         for r in range(ROWS - 3):
             for c in range(COLS - 3):
                 if board[r][c] != 0 and board[r][c] == board[r-1][c+1] == board[r-2][c+2] == board[r-3][c+3]:
