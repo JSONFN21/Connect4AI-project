@@ -1,12 +1,12 @@
 import sys
 import numpy as np
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QPushButton, QGridLayout, QVBoxLayout, QSizePolicy
+from PyQt6.QtCore import Qt
 
 # Used for AI (Random Move)
 import random
 # Used for AI (More Advanced Levels)
 import utils
-
 
 ROWS = 6 # of rows
 COLS = 7 # of columns
@@ -16,7 +16,7 @@ class Connect4Game(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Connect 4")
-        self.setGeometry(200, 200, 400, 200) # x, y, width, height
+        self.setGeometry(200, 200, 400, 400) # x, y, width, height
 
         # ==================== Start Screen ====================
         self.start_frame = QWidget()
@@ -27,20 +27,28 @@ class Connect4Game(QMainWindow):
 
         self.start_label = QLabel("Welcome to Connect 4!", self)
         self.start_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        
-        self.start_label.setStyleSheet("font-size: 24px;")
+        self.start_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+        self.start_label.setStyleSheet("color: blue; font-size: 48px; font-weight: bold;")
+        self.start_layout.addStretch(2)
         self.start_layout.addWidget(self.start_label)
+        self.start_layout.addSpacing(180)
 
         # ==================== Mode Selection Buttons ====================
         # Player vs Player Button
         self.pvp_button = QPushButton("PvP", self)
+        self.pvp_button.setStyleSheet("border: 2px solid black; border-radius: 10px; background-color: white; color: black; text-align: center; font-size: 20px")
+        self.pvp_button.setFixedSize(600, 60)
         self.pvp_button.clicked.connect(lambda: self.select_mode("PVP"))
-        self.start_layout.addWidget(self.pvp_button)
+        self.start_layout.addWidget(self.pvp_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # Player vs Environment Button
         self.pve_button = QPushButton("PvE", self)
+        self.pve_button.setStyleSheet("border: 2px solid black; border-radius: 10px; background-color: white; color: black; text-align: center; font-size: 20px")
+        self.pve_button.setFixedSize(600, 60)
         self.pve_button.clicked.connect(lambda: self.select_mode("PVE"))
-        self.start_layout.addWidget(self.pve_button)
+        self.start_layout.addWidget(self.pve_button, alignment=Qt.AlignmentFlag.AlignCenter)
+
+        self.start_layout.addStretch(5)
 
     # ==================== Mode Selection ====================
     def select_mode(self, selected_mode):
@@ -54,19 +62,30 @@ class Connect4Game(QMainWindow):
     def select_difficulty(self):
         # Clear previous layout
         for i in reversed(range(self.start_layout.count())): 
-            self.start_layout.itemAt(i).widget().setParent(None)
+            item = self.start_layout.itemAt(i)
+            if item.widget(): # Removes widgets
+                item.widget().setParent(None)
+            else: # Removes everything else
+                self.start_layout.removeItem(item)
 
         self.difficulty_label = QLabel("Select Difficulty Level:", self)
         self.difficulty_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.difficulty_label.setStyleSheet("font-size: 24px;")
+        self.difficulty_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+        self.difficulty_label.setStyleSheet("color: blue; font-size: 40px; font-weight: bold;")
+        self.start_layout.addStretch(2)
         self.start_layout.addWidget(self.difficulty_label)
+        self.start_layout.addSpacing(180)
 
         # Difficulty Buttons
         difficulty_levels = ["Easy", "Medium", "Hard", "Impossible"]
         for level in difficulty_levels:
             button = QPushButton(level, self)
+            button.setStyleSheet("border: 2px solid black; border-radius: 10px; background-color: white; color: black; text-align: center; font-size: 20px")
+            button.setFixedSize(600, 60)
             button.clicked.connect(lambda _, l=level: self.set_difficulty(l))
-            self.start_layout.addWidget(button)
+            self.start_layout.addWidget(button, alignment=Qt.AlignmentFlag.AlignCenter)
+        
+        self.start_layout.addStretch(5)
 
     # ==================== Set Difficulty ====================
     def set_difficulty(self, level):
@@ -74,7 +93,7 @@ class Connect4Game(QMainWindow):
         self.level = level
         self.show_game_screen()
 
-    # ==================== Game Screen ====================
+    # ==================== In Game Screen ====================
     def show_game_screen(self):
         self.start_frame.hide()  # Hide start screen
         # ==================== Main Widget ====================
