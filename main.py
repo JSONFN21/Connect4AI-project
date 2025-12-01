@@ -22,33 +22,45 @@ class Connect4Game(QMainWindow):
         self.start_frame = QWidget()
         self.setCentralWidget(self.start_frame)
 
-        self.start_layout = QVBoxLayout()
-        self.start_frame.setLayout(self.start_layout)
+        outer_layout = QVBoxLayout()
+        self.start_frame.setLayout(outer_layout)
+        outer_layout.addStretch(1)
 
-        self.start_label = QLabel("Welcome to Connect 4!", self)
-        self.start_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.start_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
-        self.start_label.setStyleSheet("color: blue; font-size: 48px; font-weight: bold;")
-        self.start_layout.addStretch(2)
-        self.start_layout.addWidget(self.start_label)
-        self.start_layout.addSpacing(180)
+        self.container = QWidget()
+        self.container.setMinimumSize(600, 400)
+        self.container.setMaximumSize(1000, 800)
+        self.container.setStyleSheet("background-color: lightblue")
+        
+        self.inner_layout = QVBoxLayout(self.container)
+
+        start_label = QLabel("Welcome to Connect 4!", self)
+        start_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        start_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+        start_label.setStyleSheet("color: blue; font-size: 48px; font-weight: bold;")
+        self.inner_layout.addStretch(2)
+        self.inner_layout.addWidget(start_label)
+        self.inner_layout.addSpacing(180)
+        self.inner_layout.addStretch(1)
+
+        outer_layout.addWidget(self.container, alignment=Qt.AlignmentFlag.AlignCenter)
+        outer_layout.addStretch(1)
 
         # ==================== Mode Selection Buttons ====================
         # Player vs Player Button
-        self.pvp_button = QPushButton("PvP", self)
-        self.pvp_button.setStyleSheet("border: 2px solid black; border-radius: 10px; background-color: white; color: black; text-align: center; font-size: 20px")
-        self.pvp_button.setFixedSize(600, 60)
-        self.pvp_button.clicked.connect(lambda: self.select_mode("PVP"))
-        self.start_layout.addWidget(self.pvp_button, alignment=Qt.AlignmentFlag.AlignCenter)
+        pvp_button = QPushButton("PvP", self)
+        pvp_button.setStyleSheet("border: 2px solid black; border-radius: 10px; background-color: white; color: black; text-align: center; font-size: 20px")
+        pvp_button.setFixedSize(480, 60)
+        pvp_button.clicked.connect(lambda: self.select_mode("PVP"))
+        self.inner_layout.addWidget(pvp_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # Player vs Environment Button
-        self.pve_button = QPushButton("PvE", self)
-        self.pve_button.setStyleSheet("border: 2px solid black; border-radius: 10px; background-color: white; color: black; text-align: center; font-size: 20px")
-        self.pve_button.setFixedSize(600, 60)
-        self.pve_button.clicked.connect(lambda: self.select_mode("PVE"))
-        self.start_layout.addWidget(self.pve_button, alignment=Qt.AlignmentFlag.AlignCenter)
+        pve_button = QPushButton("PvE", self)
+        pve_button.setStyleSheet("border: 2px solid black; border-radius: 10px; background-color: white; color: black; text-align: center; font-size: 20px")
+        pve_button.setFixedSize(480, 60)
+        pve_button.clicked.connect(lambda: self.select_mode("PVE"))
+        self.inner_layout.addWidget(pve_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        self.start_layout.addStretch(5)
+        self.inner_layout.addStretch(5)
 
     # ==================== Mode Selection ====================
     def select_mode(self, selected_mode):
@@ -61,31 +73,31 @@ class Connect4Game(QMainWindow):
     # ==================== Difficulty Selection ====================
     def select_difficulty(self):
         # Clear previous layout
-        for i in reversed(range(self.start_layout.count())): 
-            item = self.start_layout.itemAt(i)
+        for i in reversed(range(self.inner_layout.count())): 
+            item = self.inner_layout.itemAt(i)
             if item.widget(): # Removes widgets
                 item.widget().setParent(None)
             else: # Removes everything else
-                self.start_layout.removeItem(item)
+                self.inner_layout.removeItem(item)
 
-        self.difficulty_label = QLabel("Select Difficulty Level:", self)
-        self.difficulty_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.difficulty_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
-        self.difficulty_label.setStyleSheet("color: blue; font-size: 40px; font-weight: bold;")
-        self.start_layout.addStretch(2)
-        self.start_layout.addWidget(self.difficulty_label)
-        self.start_layout.addSpacing(180)
+        difficulty_label = QLabel("Select Difficulty Level:", self)
+        difficulty_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        difficulty_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+        difficulty_label.setStyleSheet("color: blue; font-size: 40px; font-weight: bold;")
+        self.inner_layout.addStretch(2)
+        self.inner_layout.addWidget(difficulty_label)
+        self.inner_layout.addSpacing(180)
 
         # Difficulty Buttons
         difficulty_levels = ["Easy", "Medium", "Hard", "Impossible"]
         for level in difficulty_levels:
             button = QPushButton(level, self)
             button.setStyleSheet("border: 2px solid black; border-radius: 10px; background-color: white; color: black; text-align: center; font-size: 20px")
-            button.setFixedSize(600, 60)
+            button.setFixedSize(480, 60)
             button.clicked.connect(lambda _, l=level: self.set_difficulty(l))
-            self.start_layout.addWidget(button, alignment=Qt.AlignmentFlag.AlignCenter)
+            self.inner_layout.addWidget(button, alignment=Qt.AlignmentFlag.AlignCenter)
         
-        self.start_layout.addStretch(5)
+        self.inner_layout.addStretch(5)
 
     # ==================== Set Difficulty ====================
     def set_difficulty(self, level):
@@ -95,15 +107,23 @@ class Connect4Game(QMainWindow):
 
     # ==================== In Game Screen ====================
     def show_game_screen(self):
-        self.start_frame.hide()  # Hide start screen
-        # ==================== Main Widget ====================
-        main_widget = QWidget()
-        main_widget.setStyleSheet("background-color: blue")
-        self.setCentralWidget(main_widget)
+        self.container.hide()  # Hide start screen
+        
+        game_widget = QWidget()
+        self.setCentralWidget(game_widget)
 
+        outer_game_layout = QVBoxLayout()
+        game_widget.setLayout(outer_game_layout)
+
+        # ==================== Main game Board Widget ====================
+        board_widget = QWidget()
+        board_widget.setFixedSize(800, 600)
+        board_widget.setStyleSheet("background-color: blue")
+
+        outer_game_layout.addWidget(board_widget, alignment=Qt.AlignmentFlag.AlignCenter)
         # ==================== Grid Layout (The Board) ====================
-        self.main_layout = QGridLayout()
-        main_widget.setLayout(self.main_layout)
+        self.game_layout = QGridLayout()
+        board_widget.setLayout(self.game_layout)
 
         # Initial Board Setup
         self.board = np.zeros((ROWS, COLS), dtype=int) # Makes a 2D array of the board
@@ -123,7 +143,7 @@ class Connect4Game(QMainWindow):
                 button.setStyleSheet(F"background-color: white; border-radius: {disks_size/2}px;") # Styles the button
                 button.clicked.connect(lambda _, r=row, c=col: self.handle_click(r, c)) # Button clicks are processed through handle_click
                 
-                self.main_layout.addWidget(button, row, col) # Adds the button to board
+                self.game_layout.addWidget(button, row, col) # Adds the button to board
                 row_buttons.append(button)
             self.buttons.append(row_buttons)
 
