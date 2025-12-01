@@ -27,8 +27,7 @@ class Connect4Game(QMainWindow):
         outer_layout.addStretch(1)
 
         self.container = QWidget()
-        self.container.setMinimumSize(600, 400)
-        self.container.setMaximumSize(1000, 800)
+        self.container.setMinimumSize(800, 600)
         self.container.setStyleSheet("background-color: lightblue")
         
         self.inner_layout = QVBoxLayout(self.container)
