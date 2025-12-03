@@ -2,6 +2,7 @@ import sys
 import numpy as np
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QPushButton, QGridLayout, QVBoxLayout, QSizePolicy
 from PyQt6.QtCore import Qt
+from level3 import Level3
 
 # Used for AI (Random Move)
 import random
@@ -187,6 +188,7 @@ class Connect4Game(QMainWindow):
                     # Player vs Environment (AI)
                     elif self.mode == "PVE":
                         print("AI's Turn")
+                        QApplication.processEvents() # both players moves were updating at the same time, so i added this here
                         self.current_player = 2
                         match self.level:
                             case "Easy":
@@ -278,7 +280,20 @@ class Connect4Game(QMainWindow):
         pass
 
     def level_hard(self):
-        pass
+        ai = Level3(player_piece=2, max_depth=5)
+
+        chosen_col = ai.get_move(self.board)
+
+        if chosen_col is not None:
+            self.make_ai_move(chosen_col)
+            return
+
+        available_cols = [c for c in range(COLS) if self.board[0][c] == 0]
+        if available_cols:
+            self.make_ai_move(random.choice(available_cols))
+
+            
+
 
     def level_impossible(self):
         pass
@@ -288,6 +303,39 @@ class Connect4Game(QMainWindow):
 
     def heuristic(self):
         pass
+
+    def make_ai_move(self, col):
+        """Drops the AI's token in the column and updates board"""
+        
+        if self.game_over:
+            return
+
+        # Find lowest open row
+        for r in reversed(range(ROWS)):
+            if self.board[r][col] == 0:
+
+                # drop token
+                color = "yellow"
+                self.buttons[r][col].setStyleSheet(
+                    f"background-color: {color}; border-radius: {disks_size/2}px;"
+                )
+                self.board[r][col] = 2   # ai is always piece 2
+
+                # check win / draw 
+                if self.check_win():
+                    self.game_over = True
+                    print("Player 2 (AI) wins!")
+                    return
+
+                if self.check_draw():
+                    self.game_over = True
+                    print("It's a draw!")
+                    return
+
+                # switch back to human
+                self.current_player = 1
+                return
+
 
 
 # ==================== Runs the Game ====================
