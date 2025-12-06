@@ -15,11 +15,7 @@ import math
 import multiprocessing
 import os
 from level3 import Level3
-from level4 import (
-    minimax, winning_move, get_valid_locations,
-    drop_piece, remove_piece, is_valid_location, get_next_open_row,
-    ROWS, COLS, EMPTY, PLAYER_PIECE, AI_PIECE
-)
+from level4 import ( minimax, winning_move, get_valid_locations, drop_piece, remove_piece, is_valid_location, get_next_open_row, ROWS, COLS, EMPTY, PLAYER_PIECE, AI_PIECE)
 
 # basic ga + search settings
 POPULATION_SIZE = 20
